@@ -1,0 +1,61 @@
+.neon-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(20, 25, 45, 0.7);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  padding: 16px 40px;
+  color: #eafaff;
+  font-weight: 600;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 0 25px rgba(0, 212, 255, 0.15);
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--primary);
+  font-size: 1.2rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-shadow: 0 0 10px var(--primary);
+}
+
+nav a {
+  margin: 0 12px;
+  position: relative;
+  transition: color 0.3s ease;
+}
+nav a:hover,
+nav a.active {
+  color: var(--primary);
+}
+nav a::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: var(--primary);
+  transition: width 0.3s ease;
+}
+nav a:hover::after,
+nav a.active::after {
+  width: 100%;
+}
+
+.mentor-body {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  min-height: calc(100vh - 70px);
+  padding: 40px 20px;
+  position: relative;
+  perspective: 1200px;
+  overflow: hidden;
+}

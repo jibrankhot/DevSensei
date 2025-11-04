@@ -1,0 +1,25 @@
+<div #chatContainer class="chat-wrapper">
+  <div *ngFor="let msg of chatHistory" class="chat-message" [ngClass]="msg.type">
+    <div *ngIf="msg.type === 'mentor'" class="mentor-block">
+      <div class="role">💬 Angular Mentor</div>
+      <p class="text">{{ msg.text }}</p>
+
+      <button *ngIf="msg.nextHint" class="hint-btn" (click)="revealNext(msg.nextHint)">
+        👉 {{ msg.nextHint }}
+      </button>
+    </div>
+
+    <div *ngIf="msg.type === 'user'" class="user-block">
+      <div class="role">🧠 Jibran</div>
+      <p class="text">{{ msg.text }}</p>
+    </div>
+  </div>
+
+  <!-- Typing Indicator -->
+  <div *ngIf="isTyping" class="typing-indicator">
+    <span class="dot"></span>
+    <span class="dot"></span>
+    <span class="dot"></span>
+    <span class="typing-label">Angular Mentor is typing...</span>
+  </div>
+</div>
