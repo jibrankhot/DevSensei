@@ -1,10 +1,19 @@
-<div #chatContainer class="chat-wrapper">
+<!-- Chat Container -->
+<div #chatContainer class="chat-wrapper" [class.scrollable]="chatHistory.length > 4">
+
+  <!-- Progress Bar -->
+  <div class="progress-bar">
+    <div class="progress" [style.width]="progressPercent + '%'"></div>
+  </div>
+
+  <!-- Chat Messages -->
   <div *ngFor="let msg of chatHistory" class="chat-message" [ngClass]="msg.type">
     <div *ngIf="msg.type === 'mentor'" class="mentor-block">
       <div class="role">💬 Angular Mentor</div>
       <p class="text">{{ msg.text }}</p>
 
-      <button *ngIf="msg.nextHint" class="hint-btn" (click)="revealNext(msg.nextHint)">
+      <button *ngIf="msg.nextHint && !isTyping" class="hint-btn" (click)="revealNext(msg.nextHint)"
+        [disabled]="disableNext">
         👉 {{ msg.nextHint }}
       </button>
     </div>
@@ -22,4 +31,14 @@
     <span class="dot"></span>
     <span class="typing-label">Angular Mentor is typing...</span>
   </div>
+
+  <!-- Chat Completion Summary -->
+  <div *ngIf="isChatComplete" class="summary-block">
+    <h4>🎯 Great Work Jibran!</h4>
+    <p>You’ve completed this topic. Here’s your quick recap:</p>
+    <ul>
+      <li *ngFor="let item of recapPoints">✅ {{ item }}</li>
+    </ul>
+  </div>
+
 </div>

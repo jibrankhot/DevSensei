@@ -1,22 +1,10 @@
-<!-- 🔮 Background Parallax Layers -->
+<!-- 🔮 Background Layers -->
 <div id="bg-parallax">
   <div class="parallax-layer layer1"></div>
   <div class="parallax-layer layer2"></div>
 </div>
 
-<header class="neon-header">
-  <div class="logo">
-    <span class="material-icons">psychology</span>
-    <span>Angular Mentor</span>
-  </div>
-  <nav>
-    <a routerLink="/accessibility" routerLinkActive="active">Accessibility</a>
-    <a routerLink="/directives" routerLinkActive="active">Directives</a>
-    <a routerLink="/rxjs" routerLinkActive="active">RxJS</a>
-    <a routerLink="/node-basics" routerLinkActive="active">Node</a>
-  </nav>
-</header>
-
+<!-- 🧠 Main Content Area -->
 <main class="mentor-body" (mousemove)="onMouseMove($event)">
   <router-outlet></router-outlet>
 </main>

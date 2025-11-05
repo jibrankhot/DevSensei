@@ -1,54 +1,269 @@
+/* ============================================================
+   🌌 Front2Back Mentor — Global Header + Layout Styles
+   ============================================================ */
+
+/* ---- Theme Variables ---- */
+:root {
+  --primary: #00d4ff;
+  --accent: #7d5fff;
+  --bg-glass: rgba(20, 25, 45, 0.7);
+  --header-shadow: rgba(0, 212, 255, 0.15);
+  --muted: #b0cfff;
+  --bg-sidebar: rgba(10, 15, 30, 0.92);
+}
+
+/* ============================================================
+   🔮 Parallax Background
+   ============================================================ */
+#bg-parallax {
+  position: fixed;
+  inset: 0;
+  z-index: -10;
+  pointer-events: none;
+}
+
+.parallax-layer {
+  position: absolute;
+  inset: 0;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  opacity: 0.08;
+  transform: translateZ(0);
+}
+
+.parallax-layer.layer1 {
+  background-image: radial-gradient(circle at 10% 20%, rgba(0, 212, 255, 0.12), transparent 10%),
+    radial-gradient(circle at 80% 80%, rgba(125, 95, 255, 0.08), transparent 12%);
+  filter: blur(18px);
+}
+
+.parallax-layer.layer2 {
+  background-image: radial-gradient(circle at 50% 10%, rgba(0, 212, 255, 0.06), transparent 8%),
+    radial-gradient(circle at 20% 80%, rgba(125, 95, 255, 0.04), transparent 10%);
+  filter: blur(28px);
+}
+
+/* ============================================================
+   💥 Header / Navbar
+   ============================================================ */
 .neon-header {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;
   align-items: center;
-  background: rgba(20, 25, 45, 0.7);
+  background: var(--bg-glass);
   backdrop-filter: blur(10px);
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-  padding: 16px 40px;
+  padding: 18px 40px;
   color: #eafaff;
   font-weight: 600;
   position: sticky;
   top: 0;
-  z-index: 100;
-  box-shadow: 0 0 25px rgba(0, 212, 255, 0.15);
+  z-index: 110;
+  box-shadow: 0 0 25px var(--header-shadow);
+  animation: fadeDown 0.8s ease;
+  gap: 20px;
 }
 
+/* ---- Logo ---- */
 .logo {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 14px;
   color: var(--primary);
-  font-size: 1.2rem;
-  font-weight: 700;
-  letter-spacing: 0.5px;
   text-shadow: 0 0 10px var(--primary);
 }
 
-nav a {
-  margin: 0 12px;
-  position: relative;
-  transition: color 0.3s ease;
-}
-nav a:hover,
-nav a.active {
-  color: var(--primary);
-}
-nav a::after {
-  content: '';
-  position: absolute;
-  bottom: -4px;
-  left: 0;
-  width: 0;
-  height: 2px;
-  background: var(--primary);
-  transition: width 0.3s ease;
-}
-nav a:hover::after,
-nav a.active::after {
-  width: 100%;
+.logo-icon {
+  font-size: 1.8rem;
+  animation: pulseGlow 2.8s infinite;
+  filter: drop-shadow(0 0 8px rgba(0, 212, 255, 0.15));
 }
 
+.logo-text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.05;
+}
+
+.main-title {
+  font-size: 1.4rem;
+  font-weight: 800;
+  letter-spacing: 0.6px;
+  background: linear-gradient(90deg, var(--primary), var(--accent));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: textGlow 6s ease-in-out infinite alternate;
+}
+
+.subtitle {
+  font-size: 0.8rem;
+  color: var(--muted);
+  opacity: 0.8;
+  margin-top: 2px;
+  transition: all 0.3s ease;
+}
+
+.subtitle.flicker {
+  animation: flicker 0.3s linear;
+}
+
+/* ---- Navigation ---- */
+.nav-links {
+  display: flex;
+  gap: 26px;
+  align-items: center;
+  margin-left: auto;
+}
+
+.nav-links a {
+  color: #cbe8ff;
+  text-decoration: none;
+  position: relative;
+  transition: color 0.3s ease, transform 0.2s ease;
+  font-weight: 600;
+  padding: 6px 4px;
+  border-radius: 6px;
+}
+
+.nav-links a:hover {
+  color: var(--primary);
+  transform: translateY(-2px);
+}
+
+.nav-links a::after {
+  content: '';
+  position: absolute;
+  bottom: -5px;
+  left: 4px;
+  width: 0%;
+  height: 2px;
+  background: linear-gradient(90deg, var(--primary), var(--accent));
+  border-radius: 2px;
+  transition: width 0.3s ease;
+}
+
+.nav-links a:hover::after,
+.nav-links a.active::after {
+  width: calc(100% - 8px);
+}
+
+.nav-links a.active {
+  color: var(--primary);
+  text-shadow: 0 0 6px rgba(0, 212, 255, 0.12);
+}
+
+/* ============================================================
+   🍔 Hamburger Button
+   ============================================================ */
+.hamburger-btn {
+  font-size: 1.6rem;
+  background: transparent;
+  border: none;
+  color: var(--primary);
+  cursor: pointer;
+  transition: transform 0.2s ease;
+  margin-right: 12px;
+}
+.hamburger-btn:hover {
+  transform: scale(1.2);
+  text-shadow: 0 0 10px var(--primary);
+}
+
+/* ============================================================
+   🧱 Sidebar (Dynamic Topics)
+   ============================================================ */
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: -280px;
+  width: 260px;
+  height: 100vh;
+  background: var(--bg-sidebar);
+  backdrop-filter: blur(12px) saturate(160%);
+  border-right: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow: 10px 0 25px rgba(0, 212, 255, 0.1);
+  transition: all 0.45s cubic-bezier(0.25, 0.8, 0.25, 1);
+  padding: 22px 18px;
+  z-index: 105;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  transform: perspective(800px) rotateY(20deg);
+  opacity: 0;
+}
+
+.sidebar.open {
+  left: 0;
+  transform: perspective(800px) rotateY(0deg);
+  opacity: 1;
+  box-shadow: 10px 0 40px rgba(0, 212, 255, 0.25);
+}
+
+.sidebar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: var(--primary);
+  margin-bottom: 12px;
+}
+
+.sidebar-header h3 {
+  font-size: 1rem;
+  letter-spacing: 0.5px;
+}
+
+.close-btn {
+  background: transparent;
+  border: none;
+  color: var(--primary);
+  font-size: 1.4rem;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+.close-btn:hover {
+  transform: scale(1.2);
+  text-shadow: 0 0 10px var(--primary);
+}
+
+/* ---- Sidebar Topics ---- */
+.topic-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  overflow-y: auto;
+}
+
+.topic-category {
+  font-size: 0.85rem;
+  color: var(--accent);
+  margin-top: 10px;
+  margin-bottom: 4px;
+  font-weight: 600;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  text-transform: uppercase;
+}
+
+.sidebar a {
+  color: #cbe8ff;
+  text-decoration: none;
+  font-size: 0.93rem;
+  padding: 6px 6px;
+  border-radius: 6px;
+  transition: all 0.25s ease;
+}
+
+.sidebar a:hover,
+.sidebar a.active {
+  color: var(--primary);
+  padding-left: 10px;
+  text-shadow: 0 0 8px var(--primary);
+  background: rgba(0, 212, 255, 0.05);
+}
+
+/* ============================================================
+   🧠 Main Mentor Body
+   ============================================================ */
 .mentor-body {
   display: flex;
   justify-content: center;
@@ -58,4 +273,108 @@ nav a.active::after {
   position: relative;
   perspective: 1200px;
   overflow: hidden;
+}
+
+/* ============================================================
+   ✨ Animations
+   ============================================================ */
+@keyframes fadeDown {
+  from {
+    opacity: 0;
+    transform: translateY(-14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulseGlow {
+  0%,
+  100% {
+    text-shadow: 0 0 6px var(--primary), 0 0 12px var(--primary);
+    transform: scale(1);
+  }
+  50% {
+    text-shadow: 0 0 14px var(--accent), 0 0 20px var(--accent);
+    transform: scale(1.04);
+  }
+}
+
+@keyframes textGlow {
+  0% {
+    text-shadow: 0 0 8px rgba(0, 212, 255, 0.28);
+  }
+  100% {
+    text-shadow: 0 0 20px rgba(125, 95, 255, 0.42);
+  }
+}
+
+@keyframes flicker {
+  0% {
+    opacity: 1;
+    filter: brightness(1.2);
+  }
+  20% {
+    opacity: 0.5;
+    filter: brightness(0.8);
+  }
+  40% {
+    opacity: 1;
+    filter: brightness(1.1);
+  }
+  60% {
+    opacity: 0.4;
+    filter: brightness(0.6);
+  }
+  80% {
+    opacity: 1;
+    filter: brightness(1.3);
+  }
+  100% {
+    opacity: 1;
+    filter: brightness(1);
+  }
+}
+
+/* ============================================================
+   📱 Responsive Tweaks
+   ============================================================ */
+@media (max-width: 1024px) {
+  .neon-header {
+    padding: 14px 24px;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .nav-links {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 14px;
+  }
+  .main-title {
+    font-size: 1.2rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .neon-header {
+    padding: 12px 16px;
+  }
+  .logo-icon {
+    font-size: 1.5rem;
+  }
+  .main-title {
+    font-size: 1.05rem;
+  }
+  .subtitle {
+    display: none;
+  }
+  .nav-links a {
+    font-size: 0.86rem;
+    padding: 4px;
+  }
+  .sidebar {
+    width: 85%;
+    left: -85%;
+  }
 }

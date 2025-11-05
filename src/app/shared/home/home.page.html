@@ -1,0 +1,33 @@
+<div class="home-layout">
+
+    <!-- 🌐 Navbar -->
+    <nav class="main-navbar">
+        <button *ngFor="let lang of languages" [class.active]="lang === selectedLanguage"
+            (click)="selectLanguage(lang)">
+            {{ lang | titlecase }}
+        </button>
+    </nav>
+
+    <!-- 📚 Sidebar -->
+    <aside class="sidebar">
+        <h3>{{ selectedLanguage | titlecase }} Topics</h3>
+        <ul>
+            <li *ngFor="let topic of topicGroups[selectedLanguage]">
+                {{ topic }}
+            </li>
+        </ul>
+    </aside>
+
+    <!-- 🧠 Content Area -->
+    <section class="content-area">
+        <h2>Learn {{ selectedLanguage | titlecase }}</h2>
+        <p>
+            Explore interactive lessons, examples, and coding challenges for
+            {{ selectedLanguage | titlecase }}.
+        </p>
+
+        <!-- 🗣 Chat Mentor Integration -->
+        <app-chat-ui></app-chat-ui>
+    </section>
+
+</div>

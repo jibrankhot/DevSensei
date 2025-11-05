@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { ChatService } from './core/chat.service';
 
 @Component({
   selector: 'app-root',
@@ -10,12 +9,8 @@ import { ChatService } from './core/chat.service';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  progress = 0;
-
-  constructor(private chatService: ChatService) {
-    this.progress = chatService.getProgressPercentage();
-  }
-  onMouseMove(event: MouseEvent) {
+  /** 🌌 Parallax Mouse Motion Effect */
+  onMouseMove(event: MouseEvent): void {
     const layers = document.querySelectorAll('.parallax-layer') as NodeListOf<HTMLElement>;
     const x = (event.clientX / window.innerWidth - 0.5) * 40;
     const y = (event.clientY / window.innerHeight - 0.5) * 40;

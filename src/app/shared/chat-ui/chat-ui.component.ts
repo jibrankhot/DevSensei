@@ -1,7 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input, OnInit, ElementRef, ViewChild, AfterViewChecked } from '@angular/core';
 
-/* ✅ Define and export ChatStep so topics can import it */
 export interface ChatStep {
   type: 'mentor' | 'user';
   text: string;
@@ -9,7 +8,6 @@ export interface ChatStep {
   question?: string;
 }
 
-/* Internal structure for what’s actually displayed in the chat */
 interface ChatMessage {
   type: 'mentor' | 'user';
   text: string;
@@ -30,12 +28,15 @@ export class ChatUiComponent implements OnInit, AfterViewChecked {
   chatHistory: ChatMessage[] = [];
   isTyping = false;
   currentStep = 0;
+  disableNext = false;
+  isChatComplete = false;
+  recapPoints: string[] = [];
+  progressPercent = 0;
 
   private typingAudio = new Audio('/assets/sounds/typing.mp3');
   private popAudio = new Audio('/assets/sounds/pop.mp3');
 
   ngOnInit(): void {
-    // Start first mentor message after small delay
     if (this.steps.length > 0) {
       setTimeout(() => {
         const first = this.steps[0];
@@ -55,9 +56,13 @@ export class ChatUiComponent implements OnInit, AfterViewChecked {
 
     this.chatHistory.push({ type: 'mentor', text: displayedText, nextHint });
     this.playSound('pop');
+    this.updateProgress();
   }
 
   revealNext(hintText: string) {
+    if (this.disableNext) return;
+    this.disableNext = true;
+
     this.chatHistory.push({ type: 'user', text: hintText });
     this.playSound('pop');
     this.smoothScroll();
@@ -65,7 +70,12 @@ export class ChatUiComponent implements OnInit, AfterViewChecked {
     this.currentStep++;
     const nextStep = this.steps[this.currentStep];
     if (nextStep) {
-      setTimeout(() => this.showMentorMessage(nextStep.text, nextStep.nextHint), 1200);
+      setTimeout(() => {
+        this.showMentorMessage(nextStep.text, nextStep.nextHint);
+        this.disableNext = false;
+      }, 1000);
+    } else {
+      this.endChat();
     }
   }
 
@@ -104,5 +114,21 @@ export class ChatUiComponent implements OnInit, AfterViewChecked {
     const audio = type === 'typing' ? this.typingAudio : this.popAudio;
     audio.volume = 0.2;
     audio.play().catch(() => { });
+  }
+
+  private updateProgress() {
+    this.progressPercent = Math.min(((this.currentStep + 1) / this.steps.length) * 100, 100);
+  }
+
+  private endChat() {
+    this.isChatComplete = true;
+    this.recapPoints = [
+      'Understood what the topic means',
+      'Explored how it works internally',
+      'Learned real-world use cases',
+      'Practiced with examples',
+      'Avoided common mistakes'
+    ];
+    this.updateProgress();
   }
 }
