@@ -12,22 +12,15 @@
     <aside class="sidebar">
         <h3>{{ selectedLanguage | titlecase }} Topics</h3>
         <ul>
-            <li *ngFor="let topic of topicGroups[selectedLanguage]">
-                {{ topic }}
+            <li *ngFor="let topic of topicGroups[selectedLanguage]" (click)="goToTopic(topic.link)">
+                {{ topic.label }}
             </li>
         </ul>
     </aside>
 
-    <!-- 🧠 Content Area -->
+    <!-- 🧠 Dynamic Content Area -->
     <section class="content-area">
-        <h2>Learn {{ selectedLanguage | titlecase }}</h2>
-        <p>
-            Explore interactive lessons, examples, and coding challenges for
-            {{ selectedLanguage | titlecase }}.
-        </p>
-
-        <!-- 🗣 Chat Mentor Integration -->
-        <app-chat-ui></app-chat-ui>
+        <router-outlet></router-outlet>
     </section>
 
 </div>

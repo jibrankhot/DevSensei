@@ -1,11 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnInit, ElementRef, ViewChild, AfterViewChecked } from '@angular/core';
+import { Component, Input, OnChanges, OnInit, ElementRef, ViewChild, SimpleChanges } from '@angular/core';
 
 export interface ChatStep {
   type: 'mentor' | 'user';
   text: string;
   nextHint?: string | null;
-  question?: string;
 }
 
 interface ChatMessage {
@@ -21,14 +20,15 @@ interface ChatMessage {
   templateUrl: './chat-ui.component.html',
   styleUrls: ['./chat-ui.component.scss']
 })
-export class ChatUiComponent implements OnInit, AfterViewChecked {
+export class ChatUiComponent implements OnInit, OnChanges {
+  /** 👇 Input steps for each topic */
   @Input() steps: ChatStep[] = [];
   @ViewChild('chatContainer') chatContainer!: ElementRef;
 
   chatHistory: ChatMessage[] = [];
   isTyping = false;
-  currentStep = 0;
   disableNext = false;
+  currentStep = 0;
   isChatComplete = false;
   recapPoints: string[] = [];
   progressPercent = 0;
@@ -37,18 +37,31 @@ export class ChatUiComponent implements OnInit, AfterViewChecked {
   private popAudio = new Audio('/assets/sounds/pop.mp3');
 
   ngOnInit(): void {
+    // Show chat if steps are preloaded
+    if (this.steps?.length > 0) {
+      this.startChat();
+    }
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    // 🔁 Restart chat if topic changes
+    if (changes['steps'] && !changes['steps'].firstChange) {
+      this.resetChat();
+      this.startChat();
+    }
+  }
+
+  /** 🎬 Begin the chat */
+  private startChat(): void {
     if (this.steps.length > 0) {
       setTimeout(() => {
         const first = this.steps[0];
         this.showMentorMessage(first.text, first.nextHint);
-      }, 600);
+      }, 400);
     }
   }
 
-  ngAfterViewChecked() {
-    this.scrollToBottom();
-  }
-
+  /** 💬 Show a mentor message */
   private async showMentorMessage(text: string, nextHint?: string | null) {
     this.isTyping = true;
     const displayedText = await this.typeWriterEffect(text);
@@ -59,13 +72,14 @@ export class ChatUiComponent implements OnInit, AfterViewChecked {
     this.updateProgress();
   }
 
-  revealNext(hintText: string) {
+  /** 👤 User clicks next hint */
+  revealNext(hintText: string): void {
     if (this.disableNext) return;
     this.disableNext = true;
 
     this.chatHistory.push({ type: 'user', text: hintText });
     this.playSound('pop');
-    this.smoothScroll();
+    this.scrollToBottomSmooth();
 
     this.currentStep++;
     const nextStep = this.steps[this.currentStep];
@@ -79,6 +93,7 @@ export class ChatUiComponent implements OnInit, AfterViewChecked {
     }
   }
 
+  /** 🧠 Typing animation effect */
   private async typeWriterEffect(text: string): Promise<string> {
     let output = '';
     this.playSound('typing');
@@ -97,30 +112,32 @@ export class ChatUiComponent implements OnInit, AfterViewChecked {
   }
 
   private scrollToBottom(): void {
-    try {
+    if (this.chatContainer) {
       this.chatContainer.nativeElement.scrollTop =
         this.chatContainer.nativeElement.scrollHeight;
-    } catch { }
+    }
   }
 
-  private smoothScroll(): void {
-    this.chatContainer.nativeElement.scrollTo({
-      top: this.chatContainer.nativeElement.scrollHeight,
-      behavior: 'smooth',
-    });
+  private scrollToBottomSmooth(): void {
+    if (this.chatContainer) {
+      this.chatContainer.nativeElement.scrollTo({
+        top: this.chatContainer.nativeElement.scrollHeight,
+        behavior: 'smooth',
+      });
+    }
   }
 
-  private playSound(type: 'typing' | 'pop') {
+  private playSound(type: 'typing' | 'pop'): void {
     const audio = type === 'typing' ? this.typingAudio : this.popAudio;
     audio.volume = 0.2;
     audio.play().catch(() => { });
   }
 
-  private updateProgress() {
+  private updateProgress(): void {
     this.progressPercent = Math.min(((this.currentStep + 1) / this.steps.length) * 100, 100);
   }
 
-  private endChat() {
+  private endChat(): void {
     this.isChatComplete = true;
     this.recapPoints = [
       'Understood what the topic means',
@@ -130,5 +147,15 @@ export class ChatUiComponent implements OnInit, AfterViewChecked {
       'Avoided common mistakes'
     ];
     this.updateProgress();
+  }
+
+  /** 🧹 Reset chat when topic changes */
+  private resetChat(): void {
+    this.chatHistory = [];
+    this.currentStep = 0;
+    this.isTyping = false;
+    this.isChatComplete = false;
+    this.disableNext = false;
+    this.progressPercent = 0;
   }
 }
